@@ -5,12 +5,15 @@
  */
 package hangman.model;
 
+import hangman.exceptions.HangmanException;
+
 /**
  *
  * @author 2152030
  */
 public class PowerScore implements GameScore {
     /**
+     * @throws hangman.exceptions.HangmanException
      * @pre El puntaje empieza en 100 puntos
      * @pos El puntaje esta en un rango entre [0,SUM(5^i)] con i variando de 1 hasta el len
      * @param correctCount - Cantidad de aciertos
@@ -18,7 +21,7 @@ public class PowerScore implements GameScore {
      * @return
      */
     @Override
-    public int calculateScore(int correctCount, int incorrectCount) {
+    public int calculateScore(int correctCount, int incorrectCount) throws HangmanException {
         return 0;
     }
     

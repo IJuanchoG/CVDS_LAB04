@@ -5,6 +5,8 @@
  */
 package hangman.model;
 
+import hangman.exceptions.HangmanException;
+
 /**
  *
  * @author 2152030
@@ -16,9 +18,10 @@ public class BonusScore implements GameScore {
      * @param correctCount - Cantidad de aciertos
      * @param incorrectCount - Cantidad de errores
      * @return
+     * @throws HangmanException
      */
     @Override
-    public int calculateScore(int correctCount, int incorrectCount) {
+    public int calculateScore(int correctCount, int incorrectCount) throws HangmanException{
         return 0;
     }
     

@@ -5,10 +5,17 @@
  */
 package hangman.model;
 
-/**
- *
- * @author 2152030
- */
+import hangman.exceptions.*;
+
+
 public interface GameScore {
-    public int calculateScore(int correctCount, int incorrectCount);
+    
+    /**
+     *
+     * @param correctCount
+     * @param incorrectCount
+     * @return
+     * @throws HangmanException
+     */
+    public int calculateScore(int correctCount, int incorrectCount)throws HangmanException;
 }
