@@ -24,7 +24,7 @@ public class GameModel {
     private LocalDateTime dateTime;
     private int gameScore;
     private int[] lettersUsed;
-    
+    private GameScore inyectado;
     
     private HangmanDictionary dictionary;
     
