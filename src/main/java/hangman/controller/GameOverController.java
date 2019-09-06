@@ -21,9 +21,12 @@ import javax.swing.event.AncestorListener;
 
 import hangman.GUI;
 import hangman.SwingProject;
+import hangman.exceptions.HangmanException;
 import hangman.model.GameOverModel;
 import hangman.model.Language;
 import hangman.view.GameOverPanel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GameOverController {
     private GameController gameControllerReference;
@@ -72,7 +75,10 @@ public class GameOverController {
         panel.addAncestorListener(new AncestorListener(){
             @Override
             public void ancestorAdded(AncestorEvent event) {
-                panel.getScoreLabel().setText(lan.getFinalScorelabel() + gameControllerReference.getModel().getScore());
+                try {
+                    panel.getScoreLabel().setText(lan.getFinalScorelabel() + gameControllerReference.getModel().getScore());
+                } catch (HangmanException ex) {
+                }
             }
 
             @Override

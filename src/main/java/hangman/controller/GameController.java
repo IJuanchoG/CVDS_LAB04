@@ -24,9 +24,12 @@ import javax.swing.event.AncestorListener;
 
 import hangman.GUI;
 import hangman.SwingProject;
+import hangman.exceptions.HangmanException;
 import hangman.model.GameModel;
 import hangman.model.Language;
 import hangman.view.GamePanel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GameController{
     private GamePanel panel;
@@ -52,79 +55,85 @@ public class GameController{
     //purpose: set contents of model to be reflected in the view, as well as
     // set button listeners, and activates time label
     private void setup(){
-        panel.getPoints().setText(lan.getPointsNameLabel()+ Integer.toString(model.getGameScore()));
-        panel.getGameNameLabel().setText(lan.getHangmanLabel());
-        panel.addBlanks(model.getWordLength());
-        
-        
-        for(JButton jb : panel.getKeyboardButtonArray()){
-            jb.addActionListener((ActionEvent e) -> {
-                jb.setEnabled(false);
-                ArrayList<Integer> positions = model.makeGuess(jb.getText());
-                for(int pos : positions){
-                    panel.getBlanksArrayList().get(pos).setLetter(jb.getText());
-                    panel.getBlanksArrayList().get(pos).repaint();
-                }
-                if(positions.isEmpty()){
-                    panel.getHmPanel().incrementIncorrectGuesses();
-                    panel.getHmPanel().repaint();
-                }
-                
-                panel.getPoints().setText(lan.getPointsNameLabel()+ Integer.toString(model.getGameScore()));
-                int incorrectCount = model.getIncorrectCount();
-                int correctCount = model.getCorrectCount();
-                if(incorrectCount > 5 || correctCount == model.getWordLength()){
-                    panel.getSkipButton().setEnabled(false);
-                    for(JButton button : panel.getKeyboardButtonArray()){
-                        button.setEnabled(false);
-                    }
-                    Timer timer = new Timer(1500, new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            rootController.changeVisibleCard(GUI.GAME_OVER_KEY);
+        try {
+            panel.getPoints().setText(lan.getPointsNameLabel()+ Integer.toString(model.getGameScore()));
+            panel.getGameNameLabel().setText(lan.getHangmanLabel());
+            panel.addBlanks(model.getWordLength());
+            
+            
+            for(JButton jb : panel.getKeyboardButtonArray()){
+                jb.addActionListener((ActionEvent e) -> {
+                    try {
+                        jb.setEnabled(false);
+                        ArrayList<Integer> positions = model.makeGuess(jb.getText());
+                        for(int pos : positions){
+                            panel.getBlanksArrayList().get(pos).setLetter(jb.getText());
+                            panel.getBlanksArrayList().get(pos).repaint();
                         }
-                    });
-                    timer.setRepeats(false);
-                    timer.start();
-                }
-            });
-        }
-
-        model.setScore(100);
-                
-        panel.addAncestorListener(new AncestorListener(){
-            @Override
-            public void ancestorAdded(AncestorEvent event) {
-                Timer clock = new Timer(1000, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        model.setDateTime();
-                        panel.setDateTime(model.getDateTime());
+                        if(positions.isEmpty()){
+                            panel.getHmPanel().incrementIncorrectGuesses();
+                            panel.getHmPanel().repaint();
+                        }
+                        
+                        panel.getPoints().setText(lan.getPointsNameLabel()+ Integer.toString(model.getGameScore()));
+                        int incorrectCount = model.getIncorrectCount();
+                        int correctCount = model.getCorrectCount();
+                        if(incorrectCount > 5 || correctCount == model.getWordLength()){
+                            panel.getSkipButton().setEnabled(false);
+                            for(JButton button : panel.getKeyboardButtonArray()){
+                                button.setEnabled(false);
+                            }
+                            Timer timer = new Timer(1500, new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    rootController.changeVisibleCard(GUI.GAME_OVER_KEY);
+                                }
+                            });
+                            timer.setRepeats(false);
+                            timer.start();
+                        }
+                    } catch (HangmanException ex) {
                     }
                 });
-                clock.setInitialDelay(0);
-                clock.setRepeats(true);
-                clock.start();
-            }
-
-            @Override
-            public void ancestorRemoved(AncestorEvent event) {
-            }
-
-            @Override
-            public void ancestorMoved(AncestorEvent event) {
             }
             
-        });
-        
-        panel.getSkipButton().addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                model.setScore(0);
-                rootController.changeVisibleCard(GUI.GAME_OVER_KEY);
-            }
+            model.setScore(100);
             
-        });
+            panel.addAncestorListener(new AncestorListener(){
+                @Override
+                public void ancestorAdded(AncestorEvent event) {
+                    Timer clock = new Timer(1000, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            model.setDateTime();
+                            panel.setDateTime(model.getDateTime());
+                        }
+                    });
+                    clock.setInitialDelay(0);
+                    clock.setRepeats(true);
+                    clock.start();
+                }
+                
+                @Override
+                public void ancestorRemoved(AncestorEvent event) {
+                }
+                
+                @Override
+                public void ancestorMoved(AncestorEvent event) {
+                }
+                
+            });
+            
+            panel.getSkipButton().addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    model.setScore(0);
+                    rootController.changeVisibleCard(GUI.GAME_OVER_KEY);
+                }
+                
+            });
+        } catch (HangmanException ex) {
+        }
     }
 
     //method: getPanel
@@ -142,13 +151,16 @@ public class GameController{
     //method: resetGame
     //purpose: reset associated view and controller for a new game
     public void resetGame(){
-        model.reset();
-        panel.getPoints().setText(lan.getPointsNameLabel()+ Integer.toString(model.getGameScore()));
-        panel.addBlanks(model.getWordLength());
-        panel.getHmPanel().setIncorrectGuesses(0);
-        for(JButton jb : panel.getKeyboardButtonArray()){
-            jb.setEnabled(true);
+        try {
+            model.reset();
+            panel.getPoints().setText(lan.getPointsNameLabel()+ Integer.toString(model.getGameScore()));
+            panel.addBlanks(model.getWordLength());
+            panel.getHmPanel().setIncorrectGuesses(0);
+            for(JButton jb : panel.getKeyboardButtonArray()){
+                jb.setEnabled(true);
+            }
+            panel.getSkipButton().setEnabled(true);
+        } catch (HangmanException ex) {
         }
-        panel.getSkipButton().setEnabled(true);
     }
 }

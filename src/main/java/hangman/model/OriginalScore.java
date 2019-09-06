@@ -25,4 +25,8 @@ public class OriginalScore implements GameScore {
         return ans<0?0:ans;
         
     }
+    @Override
+    public int getPuntajeInicial(){
+        return 100;
+    }
 }
