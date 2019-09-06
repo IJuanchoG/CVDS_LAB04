@@ -8,7 +8,8 @@ package hangman.model;
 import hangman.exceptions.HangmanException;
 
 
-public class OriginalScore implements GameScore {    
+public class OriginalScore implements GameScore {
+    public final int MAX_ORIGINAL_SCORE = 100;
     /**
      * @throws hangman.exceptions.HangmanException
      * @pre El puntaje empieza en 100 puntos
@@ -19,6 +20,9 @@ public class OriginalScore implements GameScore {
      */
     @Override
     public int calculateScore(int correctCount, int incorrectCount)throws HangmanException {
-        return 0;
+        if(correctCount<0 || incorrectCount<0) throw new HangmanException(HangmanException.ARGUMENTOINVALIDO);
+        int ans = MAX_ORIGINAL_SCORE-10*incorrectCount;
+        return ans<0?0:ans;
+        
     }
 }

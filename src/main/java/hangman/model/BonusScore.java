@@ -22,7 +22,9 @@ public class BonusScore implements GameScore {
      */
     @Override
     public int calculateScore(int correctCount, int incorrectCount) throws HangmanException{
-        return 0;
+        if(correctCount<0 || incorrectCount<0) throw new HangmanException(HangmanException.ARGUMENTOINVALIDO);
+        int ans = correctCount*10-incorrectCount*5;
+        return ans<0?0:ans;
     }
     
 }
